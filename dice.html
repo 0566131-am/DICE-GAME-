@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Dice Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f2f2f2;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-top: 20px;
+    }
+
+    .player-info {
+      margin: 10px;
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px;
+      font-size: 1rem;
+      width: 200px;
+    }
+
+    .dice-area {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .player {
+      margin: 20px;
+      text-align: center;
+    }
+
+    img {
+      width: 100px;
+      height: 100px;
+    }
+
+    .scores {
+      margin-top: 20px;
+      font-size: 1.5rem;
+    }
+
+    button {
+      margin: 20px 10px;
+      padding: 12px 25px;
+      font-size: 1.2rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #winner {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-top: 20px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎲 Advanced Dice Game</h1>
+
+  <div class="player-info">
+    <input id="player1Name" placeholder="Player 1 Name" />
+    <input id="player2Name" placeholder="Player 2 Name" />
+    <input id="targetScore" type="number" placeholder="Winning Score (e.g. 5)" />
+    <button onclick="startGame()">Start Game</button>
+  </div>
+
+  <div class="dice-area" style="display:none;" id="diceArea">
+    <div class="player">
+      <h2 id="name1">Player 1</h2>
+      <img id="dice1" src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg" />
+      <p>Score: <span id="score1">0</span></p>
+    </div>
+    <div class="player">
+      <h2 id="name2">Player 2</h2>
+      <img id="dice2" src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg" />
+      <p>Score: <span id="score2">0</span></p>
+    </div>
+  </div>
+
+  <div>
+    <button id="rollBtn" style="display:none;" onclick="rollDice()">🎯 Roll Dice</button>
+    <button id="resetBtn" style="display:none;" onclick="resetGame()">🔁 Reset</button>
+  </div>
+
+  <div id="winner"></div>
+
+  <script>
+    let score1 = 0, score2 = 0, target = 5, gameOver = false;
+    const diceFaces = [
+      "https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg",
+      "https://upload.wikimedia.org/wikipedia/commons/5/5f/Dice-2-b.svg",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b1/Dice-3-b.svg",
+      "https://upload.wikimedia.org/wikipedia/commons/f/fd/Dice-4-b.svg",
+      "https://upload.wikimedia.org/wikipedia/commons/0/08/Dice-5-b.svg",
+      "https://upload.wikimedia.org/wikipedia/commons/2/26/Dice-6-b.svg"
+    ];
+
+    function startGame() {
+      const name1 = document.getElementById("player1Name").value || "Player 1";
+      const name2 = document.getElementById("player2Name").value || "Player 2";
+      target = parseInt(document.getElementById("targetScore").value) || 5;
+
+      document.getElementById("name1").textContent = name1;
+      document.getElementById("name2").textContent = name2;
+
+      document.getElementById("diceArea").style.display = "flex";
+      document.getElementById("rollBtn").style.display = "inline-block";
+      document.getElementById("resetBtn").style.display = "inline-block";
+    }
+
+    function rollDice() {
+      if (gameOver) return;
+
+      const roll1 = Math.floor(Math.random() * 6);
+      const roll2 = Math.floor(Math.random() * 6);
+
+      document.getElementById("dice1").src = diceFaces[roll1];
+      document.getElementById("dice2").src = diceFaces[roll2];
+
+      if (roll1 > roll2) score1++;
+      else if (roll2 > roll1) score2++;
+
+      document.getElementById("score1").textContent = score1;
+      document.getElementById("score2").textContent = score2;
+
+      if (score1 >= target || score2 >= target) {
+        gameOver = true;
+        let winner = score1 > score2 ? document.getElementById("name1").textContent : document.getElementById("name2").textContent;
+        document.getElementById("winner").textContent = `🏆 ${winner} wins the game!`;
+      }
+    }
+
+    function resetGame() {
+      score1 = 0;
+      score2 = 0;
+      gameOver = false;
+      document.getElementById("score1").textContent = "0";
+      document.getElementById("score2").textContent = "0";
+      document.getElementById("winner").textContent = "";
+      document.getElementById("dice1").src = diceFaces[0];
+      document.getElementById("dice2").src = diceFaces[0];
+    }
+  </script>
+
+</body>
+</html>
